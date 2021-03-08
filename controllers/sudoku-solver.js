@@ -148,6 +148,7 @@ class SudokuSolver {
     var arr = [1,2,3,4,5,6,7,8,9];
     var arrayStorage=[];
     var resultArray = Array.from(this.puzzleString);
+    //var blockedValue =10;
     const regionIndexArray = [['0','1','2','9','10','11','18','19','20'],['3','4','5','12','13','14','21','22','23'],['6','7','8','15','16','17','24','25','26'],['27','28','29','36','37','38','45','46','47'],['30','31','32','39','40','41','48','49','50'],['33','34','35','42','43','44','51','52','53'],['54','55','56','63','64','65','72','73','74'],['57','58','59','66','67','68','75','76','77'],['60','61','62','69','70','71','78','79','80']];
     
     //Simple solving function approach by checking for each region i if single entry is missing
@@ -161,19 +162,21 @@ class SudokuSolver {
           if (isNaN(resultArray[regionIndexArray[i][j]])){
             countUndefined++;
             regionUndefinedIndex=j;
+            regionUsedValues.push('99'); // as a replacement value to have 9 as well            
           } else {
             regionUsedValues.push(resultArray[regionIndexArray[i][j]]);            
           }     
         }
+        
         if (countUndefined===1){
-          for (let k=0; k<9; k++){
-            let regionUsedValuesSorted = regionUsedValues.sort();
-            let arrSorted = arr.sort();
-            
-            if (regionUsedValuesSorted[k]>arrSorted[k]){
+          let regionUsedValuesSorted = regionUsedValues.sort();
+          let arrSorted = arr.sort();            
+          for (let k=0; k<9; k++){                           
+            if (regionUsedValuesSorted[k]>arrSorted[k]){              
               //console.log('we add '+arr[k]+' because '+regionUsedValuesSorted[k]+' > '+arr[k]);                                         
               resultArray[regionIndexArray[i][regionUndefinedIndex]] = arrSorted[k];              
-              break;
+            } else {
+              continue;
             }
           }          
         }
@@ -198,14 +201,14 @@ class SudokuSolver {
           };
         }
         if (countUndefined===1){
-          //console.log('we have a simple col');
+          
           for (let k=0; k<9; k++){
-            let colUsedValuesSorted = colUsedValues.sort().slice(1);
+            let colUsedValuesSorted = colUsedValues.sort().slice(1);            
             if (colUsedValuesSorted[k]>arrSorted[k]){
               //console.log('we add '+arrSorted[k]+' because '+colUsedValuesSorted[k]+' > '+arrSorted[k]);
               let replaceIndex = startIndex + colUndefinedIndex;
               //console.log('we replace index '+replaceIndex);
-              resultArray[replaceIndex] = arrSorted[k];              
+              resultArray[replaceIndex] = arrSorted[k];          
               break;
             }
           }          
@@ -249,31 +252,47 @@ class SudokuSolver {
     }
     
     //Brute force solution
-    function tryToSolve(orderArray){
-      shuffleArray(arr); 
+    function tryToSolve(){     
+      shuffleArray(arr);      
       arrayStorage.push(arr.join(""))   
-      for (let i=0; i<81; i++){      
-        for (let j=0; j<9; j++){          
-          let rows = ['A','B','C','D','E','F','G','H','I']; 
-          let newRowNum = Math.trunc(i/9);
-          let newRow = rows[newRowNum]; 
-          let newCol = i-newRowNum*9+1;
-          var count = 0;
-          if (isNaN(resultArray[i])){   
-            let newValue = orderArray[j].toString();                    
+      for (let i=0; i<81; i++) {
+        if(isNaN(resultArray[i])){          
+          let count = 0;
+          for (let j=0; j<9; j++){
+            
+            /*for blocking last used value in case of backtracing
+            if(blockedValue===j){
+              blockedValue=10;
+              continue;
+            }*/
+
+            let rows = ['A','B','C','D','E','F','G','H','I']; 
+            let newRowNum = Math.trunc(i/9);
+            let newRow = rows[newRowNum]; 
+            let newCol = i-newRowNum*9+1;                       
+            let newValue = arr[j].toString();                    
             let result = new SudokuSolver(resultArray.join(""),newRow,newCol,newValue);       
             //console.log(result.checkAll()+' for '+newValue+' for coord '+newRow+newCol);
             if (result.checkAll()){          
-              resultArray[i]=orderArray[j];            
+                      
+              resultArray[i]=arr[j];            
               count++;
-            } 
-          }       
-        }
-        //here I must add a break if no number has been added it means '.' could not be substituted and therefore we restart
-        if(count=0){
-          console.log('break if no replacement took place works !');
-          break;
-        }
+            }
+            
+          }
+          //here I struggle to implement backtracing therefore I just break and start fresh
+          if(count===0){
+            //console.log('break if no replacement took place works !');
+            //blockedValue=resultArray[i-1];
+            //console.log(blockedValue);
+            //i--;            
+            //continue;
+            break;
+          }      
+        } 
+        else {
+          continue;
+        }          		
       }
     }  
     //Helper function for randomizing numbers as start values for iteration
@@ -287,11 +306,12 @@ class SudokuSolver {
     }
     
     while (resultArray.includes('.')) {
-      resultArray = Array.from(this.puzzleString);
+      resultArray = Array.from(this.puzzleString);      
       simpleSolveRegion();
+      //console.log(resultArray);
       simpleSolveCol();
-      simpleSolveRow();         
-      tryToSolve(arr);      
+      simpleSolveRow();
+      tryToSolve();      
     }   
     //console.log(arrayStorage);
     var resultString = resultArray.join("");

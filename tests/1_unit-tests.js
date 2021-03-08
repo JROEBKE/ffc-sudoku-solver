@@ -6,7 +6,7 @@ const Solver = require('../controllers/sudoku-solver.js');
 let solver;
 
 suite('UnitTests', () => {
-  
+  /*
   // valid string tests
   it('returns true if valid input of 81', function(){               
     let isValid = new Solver('.29..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..');             
@@ -101,12 +101,12 @@ suite('UnitTests', () => {
   
 
   //solving tests
-
+  
   it('returns solved string for puzzled string with simple example for region', function(){               
     let isValid = new Solver('.35762984946381257728459613694517832812936745357824196473298561581673429269145378');             
     expect(isValid.solve()).to.equal('135762984946381257728459613694517832812936745357824196473298561581673429269145378');
   });
-  
+  */
   it('returns solved string for puzzled string with simple example for column', function(){               
     let isValid = new Solver('.35762984.46381257728459613694517832812936745357824196473298561581673429269145378');             
     expect(isValid.solve()).to.equal('135762984946381257728459613694517832812936745357824196473298561581673429269145378');
@@ -116,7 +116,7 @@ suite('UnitTests', () => {
     let isValid = new Solver('..5762984946381257728459613694517832812936745357824196473298561581673429269145378');             
     expect(isValid.solve()).to.equal('135762984946381257728459613694517832812936745357824196473298561581673429269145378');
   });
-
+  
   it('returns solved string for puzzled string-1', function(){               
     let isValid = new Solver('1.5..2.84..63.12.7.2..5.....9..1....8.2.3674.3.7.2..9.47...8..1..16....926914.37.');             
     expect(isValid.solve()).to.equal('135762984946381257728459613694517832812936745357824196473298561581673429269145378');
@@ -132,11 +132,11 @@ suite('UnitTests', () => {
     expect(isValid.solve()).to.equal('473891265851726394926345817568913472342687951197254638734162589685479123219538746');
   });
   
-  // This leads to time out, I assume my strategy is not well designed be reitareting with start number, there is definelty some better strategy
-    /*
+
+  
+  // needs long time  
   it('returns solved string for puzzled string-4', function(){               
     let isValid = new Solver('82..4..6...16..89...98315.749.157.............53..4...96.415..81..7632..3...28.51');             
     expect(isValid.solve()).to.equal('827549163531672894649831527496157382218396475753284916962415738185763249374928651');
-  });  
-  */
+  });
 });
