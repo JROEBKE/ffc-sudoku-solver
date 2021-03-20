@@ -73,7 +73,7 @@ suite('Functional Tests', () => {
           res.should.have.status(200);
           res.should.be.json;
           res.body.should.be.a('object');
-          res.body.should.have.property('solution').eql("Puzzle cannot be solved");      
+          res.body.should.have.property('error').eql("Puzzle cannot be solved");      
           done();
         })
     });
