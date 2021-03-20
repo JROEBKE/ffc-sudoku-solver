@@ -150,7 +150,7 @@ class SudokuSolver {
 
   checkAll() {
     if (this.checkRowPlacement() && this.checkColPlacement() && this.checkRegionPlacement()){
-      //console.log('input '+this.row+this.column+' '+this.value+' correct with string'+this.puzzleString);
+      //console.log('input '+this.row+this.column+' value '+this.value+' correct with string'+this.puzzleString);
       return true;
     } else {
       //console.log('provided string is invalid');
@@ -160,180 +160,61 @@ class SudokuSolver {
  
 
   solve() {
-    var arr = [1,2,3,4,5,6,7,8,9];
-    var arrayStorage=[];
-    var resultArray = Array.from(this.puzzleString);
-    var blockedValue =10;
-    var backtracedIndex;
+
+    const rows = ['A','B','C','D','E','F','G','H','I'];
     const regionIndexArray = [['0','1','2','9','10','11','18','19','20'],['3','4','5','12','13','14','21','22','23'],['6','7','8','15','16','17','24','25','26'],['27','28','29','36','37','38','45','46','47'],['30','31','32','39','40','41','48','49','50'],['33','34','35','42','43','44','51','52','53'],['54','55','56','63','64','65','72','73','74'],['57','58','59','66','67','68','75','76','77'],['60','61','62','69','70','71','78','79','80']];
+    var startingArray = Array.from(this.puzzleString);
     
-    //Simple solving function approach by checking for each region i if single entry is missing
-    function simpleSolveRegion(){   
-      for (let i=0; i<9; i++){
-        let regionUndefinedIndex = 0;
-        let countUndefined =0;
-        let regionUsedValues=[];
-        
-        
-        for (let j=0; j<9; j++){              
-          if (isNaN(resultArray[regionIndexArray[i][j]])){            
-            countUndefined++;
-            regionUndefinedIndex=j;
-            regionUsedValues.push('99'); // as a replacement value to have 9 as well            
-          } else {
-            regionUsedValues.push(resultArray[regionIndexArray[i][j]]);            
-          }     
-        }
-        
-        if (countUndefined===1){
-          let regionUsedValuesSorted = regionUsedValues.sort();
-          
-          let arrSorted = arr.sort();
-          
-          for (let k=0; k<9; k++){                           
-            if (regionUsedValuesSorted[k]>arrSorted[k]){              
-              resultArray[regionIndexArray[i][regionUndefinedIndex]] = arrSorted[k];
-              break;
-            } else {
-              continue;
-            }
-          }          
-        }
+    // we select only these index numbers which have to be replaced
+    var undefindedIndexArray=[];
+    for (let i=0; i<81; i++) {
+      if(isNaN(startingArray[i])){ 
+        undefindedIndexArray.push(i);
+      } else {
+        continue;
       }
-    }    
-   
-    //Simple solving function approach by checking for each column i if single entry is missing
-    function simpleSolveCol(){   
-      for (let i=0; i<9; i++){
-        let countUndefined =0;        
-        let startIndex = i*9;
-        let endIndex = startIndex+9;
-        let arrSorted = arr.sort();
-        let colUsedValues=resultArray.slice(startIndex,endIndex);
-        let colUndefinedIndex;
-        
-        for (let j=0; j<9;j++) {
-          if(isNaN(colUsedValues[j])){
-            countUndefined++;
-            colUndefinedIndex=j;
-          };
-        }
-        if (countUndefined===1){
-          
-          for (let k=0; k<9; k++){
-            let colUsedValuesSorted = colUsedValues.sort().slice(1);            
-            if (colUsedValuesSorted[k]>arrSorted[k]){
-              let replaceIndex = startIndex + colUndefinedIndex;
-              resultArray[replaceIndex] = arrSorted[k];          
-              break;
-            }
-          }          
-        }
-      }
-
     }
-
-    //Simple solving function approach by checking for each row i if single entry is missing
-    function simpleSolveRow(){   
-      let arrSorted = arr.sort();
-      for (let i=0; i<1; i++){   
-        let countUndefined =0;        
-        let rowUsedValues=[];
-        let rowUndefinedIndex;
+    
+    // now for each undefined value we go through and check if a value starting by 1 until 9 is possible, if so we store it in startingArray
+    for(let i=0; i<undefindedIndexArray.length;) {
+      let strike = false;  //indicator if we have a match or not
       
-        for (let j=0; j<9;j++) {
-          rowUsedValues.push(resultArray[i+j*9]);          
-          if(isNaN(rowUsedValues[j])){
-            countUndefined++;
-            rowUndefinedIndex=j;
-          };
-        }
-        if (countUndefined===1){          
-          for (let k=0; k<9; k++){
-            let rowUsedValuesSorted = rowUsedValues.sort().slice(1);
-            if (rowUsedValuesSorted[k]>arrSorted[k]){              
-              let replaceIndex =rowUndefinedIndex+i*9;              
-              resultArray[replaceIndex] = arrSorted[k];              
-              break;
-            }
-          }          
-        }
-      }
+      var newValue; // value we want to try next
+      if(isNaN(startingArray[undefindedIndexArray[i]])){
+        newValue = 1;
+      } else {
+        newValue = startingArray[undefindedIndexArray[i]]+1;
+      }         
+      let newRowNum = Math.trunc(undefindedIndexArray[i]/9);
+      let newRow = rows[newRowNum];      
+      let newCol = undefindedIndexArray[i]-newRowNum*9+1;      
 
-    }
-    
-    //Brute force solution
-    function tryToSolve(){     
-      shuffleArray(arr);      
-      arrayStorage.push(arr.join(""))   
-      for (let i=0; i<81; i++) {
-        if(isNaN(resultArray[i])){          
-          let count = 0;
-          for (let j=0; j<9; j++){
-            
-            //for blocking last used value in case of backtracing
-            /*
-            if(i===backtracedIndex && j===blockedValue){
-              console.log('blocked value '+blockedValue+' for index '+backtracedIndex);
-              blockedValue=10;
-              continue;
-            }*/
-
-            let rows = ['A','B','C','D','E','F','G','H','I']; 
-            let newRowNum = Math.trunc(i/9);
-            let newRow = rows[newRowNum]; 
-            let newCol = i-newRowNum*9+1;                       
-            let newValue = arr[j].toString();                    
-            let result = new SudokuSolver(resultArray.join(""),newRow,newCol,newValue);       
-            
-            if (result.checkAll()){                               
-              resultArray[i]=arr[j];            
-              count++;             
-            }
-            
-          }
-          //here I struggle to implement backtracing therefore I just break and start fresh
-          if(count===0){
-
-            //blockedValue=resultArray[i-1];
-            //backtracedIndex = i--;
-            
-            //somehow setting i-2 and continue does lead to long lead time i-2+continue (i++) => i-- which is backtracedIndex 
-            //i=i-2;            
-            //continue;
-            
-            break;
-          }      
+      // when we have a match with newValue we replace . from starting index otherwise we increase value by 1 and do it again
+      for (newValue;newValue<10 && !strike;){
+        let test = new SudokuSolver(startingArray.join(""),newRow.toString(),newCol.toString(),newValue.toString());
+        if (test.checkAll()){        
+          strike = true;          
+          startingArray[undefindedIndexArray[i]] = newValue;
+          i++;
         } 
         else {
-          continue;
-        }          		
+          strike = false;
+          newValue++;      
+        }
       }
-    }  
-    //Helper function for randomizing numbers as start values for iteration
-    function shuffleArray(arr) {           
-      while (arrayStorage.includes(arr.join(""))) {        
-        for (let i = arr.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [arr[i], arr[j]] = [arr[j], arr[i]];          
-        }         
-      }      
+      //if we did not find a suitable candidate for index to be replace, we have to go back to last replacement and find an alternative ==> bracktracing           
+      if(!strike) {
+        startingArray[undefindedIndexArray[i]] = 0;
+        i--;        
+      }
+      //here we escape if we are running out of options and return false for unsolveable sodukos
+      if(!strike && i===-1) {
+        return false;        
+      }
+
     }
-    
-    while (resultArray.includes('.')) {
-      resultArray = Array.from(this.puzzleString);      
-      simpleSolveRegion();      
-      simpleSolveCol();
-      simpleSolveRow();
-      tryToSolve();      
-    }   
-    
-    var resultString = resultArray.join("");
-    console.log('random tries '+arrayStorage.length);
-    
-    console.log(resultString);
-    return resultString;    
-  }
+    return startingArray.join("");
+  }  
 }
 
 module.exports = SudokuSolver;

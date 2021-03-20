@@ -62,10 +62,16 @@ module.exports = function (app) {
         res.status(400).json(solution.validate());        
       }
       else {
-        var result ={
-            "solution": solution.solve()
-        }        
-        res.status(200).json(result);    
+        var result = solution.solve();
+        if (!result){
+          res.status(200).json({
+            "solution": "Puzzle cannot be solved"
+          });
+        } else {
+          res.status(200).json({
+            "solution": result
+          });
+        }
       }
     }
     );    

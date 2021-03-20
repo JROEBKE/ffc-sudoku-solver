@@ -3,7 +3,7 @@
 All puzzle logic can go into /controllers/sudoku-solver.js
     The validate function should take a given puzzle string and check it to see if it has 81 valid characters for the input. X
     The check functions should be validating against the current state of the board. X
-    The solve function should handle solving any given valid puzzle string, not just the test inputs and solutions. You are expected to write out the logic to solve this. ? Yeah but complex strings not work perfectly
+    The solve function should handle solving any given valid puzzle string, not just the test inputs and solutions. You are expected to write out the logic to solve this. X
     All routing logic can go into /routes/api.js X
     See the puzzle-strings.js file in /controllers for some sample puzzles your application should solve X
     To run the challenge tests on this page, set NODE_ENV to test without quotes in the .env file X
@@ -22,7 +22,7 @@ Write the following tests in tests/1_unit-tests.js:
     Logic handles an invalid region (3x3 grid) placement X
     Valid puzzle strings pass the solver X
     Invalid puzzle strings fail the solver X
-    Solver returns the the expected solution for an incomplete puzzle X Could be better strategy > Timeout for last sample puzzle provided
+    Solver returns the the expected solution for an incomplete puzzle X
 
 Write the following tests in tests/2_functional-tests.js
 
@@ -30,7 +30,7 @@ Write the following tests in tests/2_functional-tests.js
     Solve a puzzle with missing puzzle string: POST request to /api/solve X
     Solve a puzzle with invalid characters: POST request to /api/solve X
     Solve a puzzle with incorrect length: POST request to /api/solve X
-    Solve a puzzle that cannot be solved: POST request to /api/solve        ! Here we have to code a bit
+    Solve a puzzle that cannot be solved: POST request to /api/solve X
     Check a puzzle placement with all fields: POST request to /api/check X
     Check a puzzle placement with single placement conflict: POST request to /api/check X
     Check a puzzle placement with multiple placement conflicts: POST request to /api/check X

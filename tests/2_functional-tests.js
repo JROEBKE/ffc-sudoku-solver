@@ -16,8 +16,7 @@ suite('Functional Tests', () => {
         })
         .end(function(err, res){          
           res.should.have.status(200);
-          res.should.be.json;
-          res.body.should.be.a('object');
+          res.should.be.json;          
           res.body.should.have.property('solution').eql("769235418851496372432178956174569283395842761628713549283657194516924837947381625");               
           done();
         })
@@ -71,10 +70,10 @@ suite('Functional Tests', () => {
             "puzzle":"5168497323.76.5...8.97...65135.6.9.7472591..696837..5.253186.746842.75..791.5.6.8"      
         })
         .end(function(err, res){          
-          res.should.have.status(400);
+          res.should.have.status(200);
           res.should.be.json;
           res.body.should.be.a('object');
-          res.body.should.have.property('error').eql("Puzzle cannot be solved");      
+          res.body.should.have.property('solution').eql("Puzzle cannot be solved");      
           done();
         })
     });
