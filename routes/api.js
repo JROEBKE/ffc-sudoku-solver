@@ -65,7 +65,7 @@ module.exports = function (app) {
         var result = solution.solve();
         if (!result){
           res.status(200).json({
-            "solution": "Puzzle cannot be solved"
+            "error": "Puzzle cannot be solved"
           });
         } else {
           res.status(200).json({
