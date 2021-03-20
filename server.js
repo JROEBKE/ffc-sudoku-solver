@@ -39,7 +39,6 @@ app.use(function(req, res, next) {
 const PORT = process.env.PORT || 3000
 app.listen(PORT, function () {
   console.log("Listening on port " + PORT);
-  // process.env.NODE_ENV='test'
   if (process.env.NODE_ENV==='test') {
     console.log('Running Tests...');
     setTimeout(function () {
@@ -49,7 +48,7 @@ app.listen(PORT, function () {
         console.log('Tests are not valid:');
         console.error(error);
       }
-    }, 1500);
+    }, 15000);
   }
 });
 
