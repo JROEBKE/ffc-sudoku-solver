@@ -7,19 +7,34 @@ class SudokuSolver {
   }
 
   validate() {
+    if (!this.validateExists()){
+      return {
+        "error": "Required field missing"
+      }
+    }  
     if (!this.validateLength()){
       return {
         "error": "Expected puzzle to be 81 characters long"
       }
     }    
-    if(!this.validateCharacters()){
+    if(!this.validatePuzzleCharacters()){
       return {
         "error": "Invalid characters in puzzle"
       }
     }
+
     else {
       // unfortunately inversed to send error back
       return false;
+    }
+
+  }
+
+  validateExists() {
+    if (this.puzzleString.length===0){
+      return false; 
+    } else {
+      return true;
     }
   }
 
@@ -31,7 +46,7 @@ class SudokuSolver {
     }
   }
 
-  validateCharacters() {
+  validatePuzzleCharacters() {
     if (this.puzzleString.match(/^[\d .]+$/g)){      
       return true;
     }

@@ -30,7 +30,7 @@ suite('Functional Tests', () => {
           res.should.have.status(400);
           res.should.be.json;
           res.body.should.be.a('object');
-          res.body.should.have.property('error').eql("Expected puzzle to be 81 characters long");      
+          res.body.should.have.property('error').eql("Required field missing");      
           done();
         })
     });

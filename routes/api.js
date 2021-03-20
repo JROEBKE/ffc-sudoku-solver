@@ -20,9 +20,10 @@ module.exports = function (app) {
 
         const errors = validationResult(req);        
         if (!errors.isEmpty()) {
-          //console.log(errors.array([0]));
-          return res.status(400).send({ errors: errors.array()});
+          return res.status(400).send({ errors: errors.array()});                 
+          
         }   
+
 
         let coordinateArray = req.body.coordinate.split("");
         let selectedRow = coordinateArray[0].toUpperCase();
@@ -47,21 +48,16 @@ module.exports = function (app) {
     
   app.route('/api/solve')
     .post([      
-      check('puzzle').trim().escape()
+      check('puzzle').trim().escape(),
     ],
     (req, res) => {
-      
-      const errors = validationResult(req);        
-        if (!errors.isEmpty()) {
-        return res.status(400).send({ errors: errors.array()});
-      }   
-
       let solution = new SudokuSolver(req.body.puzzle);
-
       if (solution.validate()){
         res.status(400).json(solution.validate());        
       }
+      
       else {
+        
         var result = solution.solve();
         if (!result){
           res.status(200).json({
