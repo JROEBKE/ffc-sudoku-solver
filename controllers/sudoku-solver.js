@@ -3,69 +3,85 @@ class SudokuSolver {
     this.puzzleString=puzzleString;
     this.row = row;
     this.column = column;
-    this.value = value;
+    this.value = value 
   }
 
   validate() {
-    if (!this.validateExists()){
-      return {
-        "error": "Required field missing"
+    
+    if (this.puzzleString==='' || this.puzzleString===undefined){ 
+      if(this.row !== undefined || this.column !== undefined || this.value !== undefined){
+        return {
+          "error": "Required field(s) missing"          
+        }
       }
-    }  
-    if (!this.validateLength()){
+      else {
+        return {
+          "error": "Required field missing"        
+        }
+      }  
+    }
+    
+    if ((this.row === '' || this.row===undefined )&& (this.column !== undefined || this.value !== undefined)){      
+      return {
+        "error": "Required field(s) missing"        
+      }
+    } 
+    if ((this.column === ''|| this.column===undefined ) && (this.row !== undefined || this.value !== undefined)){            
+      return {
+        "error": "Required field(s) missing"        
+      }
+    } 
+
+    if ((this.value === ''|| this.value ===undefined) && (this.row !== undefined || this.column !== undefined)){      
+      return {
+        "error": "Required field(s) missing"        
+      }
+    } 
+
+    if (this.puzzleString.length!==81){
       return {
         "error": "Expected puzzle to be 81 characters long"
       }
     }    
-    if(!this.validatePuzzleCharacters()){
+    if(!this.puzzleString.match(/^[\d .]+$/g)){
       return {
         "error": "Invalid characters in puzzle"
       }
     }
 
+    if(this.row !== undefined && !this.row.match(/[a-i]|[A-I]$/)){
+        return {
+          "error": "Invalid coordinate"
+      }
+    }
+    if(this.column!==undefined && !this.column.match(/[1-9]$/)){    
+      return {
+        "error": "Invalid coordinate"
+      }
+    }
+
+    if(this.value!==undefined && !this.value.match(/[1-9]$/)){      
+      return {
+        "error": "Invalid value"
+      }
+    }
+
     else {
-      // unfortunately inversed to send error back
-      return false;
-    }
-
-  }
-
-  validateExists() {
-    if (this.puzzleString.length===0){
-      return false; 
-    } else {
-      return true;
-    }
-  }
-
-  validateLength() {
-    if (this.puzzleString.length!==81){
-      return false; 
-    } else {
-      return true;
-    }
-  }
-
-  validatePuzzleCharacters() {
-    if (this.puzzleString.match(/^[\d .]+$/g)){      
-      return true;
-    }
-    else {      
+      // unfortunately false because send error back leads to true
       return false;
     }
   }
 
+ 
   checkRowPlacement() {
-    let rows = ['A','B','C','D','E','F','G','H','I'];
+    const rows = ['A','B','C','D','E','F','G','H','I'];
     let startValue = rows.indexOf(this.row) * 9;
     let endValue = startValue + 9;
     let choppedString = this.puzzleString.slice(startValue,endValue);
     
     if (Array.from(choppedString).indexOf(this.value)=='-1'){
-      //console.log('value not in row');
       return true;
     } else {
-      //console.log('value already in row');
       return false;
     }
   }
@@ -80,10 +96,8 @@ class SudokuSolver {
     }
 
     if (newArray.indexOf(this.value)=='-1'){
-      //console.log('value not in column');
       return true;
     } else {
-      //console.log('value already in column');
       return false;
     }
   }
@@ -149,33 +163,41 @@ class SudokuSolver {
         newArray.push(puzzleArray[Number(box9[i])]);       
       }
     } else {
-      console.log('something went wrong numIndex is not part of boxes');
       return false;
     }
 
     
     if (newArray.indexOf(this.value)=='-1'){
-      //console.log('value not in region');
       return true;
     } else {
-      //console.log('value already in region');
       return false;
     }
   }
 
   checkAll() {
+
+    let rows = ['A','B','C','D','E','F','G','H','I'];
+    let valueIndex = (rows.indexOf(this.row)*9)+Number(this.column)-1;    
+    let puzzleArray = Array.from(this.puzzleString);
+
+    //If value submitted to /api/check is already placed in puzzle on that coordinate, the returned value will be an object containing a valid property with true if value is not conflicting.
+    if(this.value!==undefined && this.value===puzzleArray[valueIndex]){      
+      puzzleArray[valueIndex]='.';
+      this.puzzleString=puzzleArray.join("");
+      console.log('coordinate already in use');
+    }
+    
+
     if (this.checkRowPlacement() && this.checkColPlacement() && this.checkRegionPlacement()){
-      //console.log('input '+this.row+this.column+' value '+this.value+' correct with string'+this.puzzleString);
       return true;
     } else {
-      //console.log('provided string is invalid');
       return false;
     };         
   }
- 
+
+         
 
   solve() {
-
     const rows = ['A','B','C','D','E','F','G','H','I'];
     const regionIndexArray = [['0','1','2','9','10','11','18','19','20'],['3','4','5','12','13','14','21','22','23'],['6','7','8','15','16','17','24','25','26'],['27','28','29','36','37','38','45','46','47'],['30','31','32','39','40','41','48','49','50'],['33','34','35','42','43','44','51','52','53'],['54','55','56','63','64','65','72','73','74'],['57','58','59','66','67','68','75','76','77'],['60','61','62','69','70','71','78','79','80']];
     var startingArray = Array.from(this.puzzleString);
