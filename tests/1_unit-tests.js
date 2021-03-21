@@ -8,23 +8,56 @@ let solver;
 suite('UnitTests', () => {
  
   // validation string tests
-  it('returns false if valid input of 81', function(){               
-    let isValid = new Solver('.29..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..');             
+  it('returns false if valid input of puzzlestring', function(){               
+    let isValid = new Solver('..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..');         
     expect(isValid.validate()).to.be.false;
   });
-  
-  it('returns true if invalid input alphanumeric instead numeric + .', function(){
-    let isInValid = new Solver('A29..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..');
-    expect(isInValid.validateCharacters()).to.be.false;
+  it('returns error when missing required field puzzle', function(){
+    let isInValid = new Solver('');        
+    expect(isInValid.validate()).to.have.property('error').eql("Required field missing");    
   });
-   it('returns true if input <81 characters', function(){
+  it('returns error if invalid input alphanumeric instead numeric + .', function(){
+    let isInValid = new Solver('A.9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..');
+    expect(isInValid.validate()).to.have.property('error').eql("Invalid characters in puzzle");   
+  });
+   it('returns error if input <81 characters', function(){
     var isInValid = new Solver('29..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..');
-    expect(isInValid.validateLength()).to.be.false;
+    expect(isInValid.validate()).to.have.property('error').eql("Expected puzzle to be 81 characters long");   
   });
-  it('returns true if input >81 characters', function(){
+  it('returns error if input >81 characters', function(){
     var isInValid = new Solver('1129..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..');
-    expect(isInValid.validateLength()).to.be.false;
+    expect(isInValid.validate()).to.have.property('error').eql("Expected puzzle to be 81 characters long");   
   });
+  it('returns error if both coordinates missing', function(){
+    var isInValid = new Solver('.29..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..','','','7');
+    expect(isInValid.validate()).to.have.property('error').eql("Required field(s) missing");   
+  });
+  it('returns error if row is missing', function(){
+    var isInValid = new Solver('.29..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..','','1','7');
+    expect(isInValid.validate()).to.have.property('error').eql("Required field(s) missing");   
+  });
+  it('returns error if column is missing', function(){
+    var isInValid = new Solver('.29..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..','A','','7');
+    expect(isInValid.validate()).to.have.property('error').eql("Required field(s) missing");   
+  });
+  it('returns error if value missing', function(){
+    var isInValid = new Solver('.29..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..','A','1','');
+    expect(isInValid.validate()).to.have.property('error').eql("Required field(s) missing");   
+  });
+  it('returns error if wrong coordinate row Z', function(){
+    var isInValid = new Solver('.29..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..','Z','1','7');
+    expect(isInValid.validate()).to.have.property('error').eql("Invalid coordinate");   
+  });
+  it('returns error if wrong coordinate col 0', function(){
+    var isInValid = new Solver('.29..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..','A','0','7');
+    expect(isInValid.validate()).to.have.property('error').eql("Invalid coordinate");   
+  });
+  it('returns error if wrong value 0', function(){
+    var isInValid = new Solver('.29..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..','A','1','0');
+    expect(isInValid.validate()).to.have.property('error').eql("Invalid value");   
+  });
+
+
 
   //row placement tests
   it('returns true by correct placement', function(){               
