@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 
 suite('Functional Tests', () => {
     // api/solve tests
-    test('Solve a puzzle with valid puzzle string', function(done) {
+    test('Solve a puzzle with valid puzzle string: POST request to /api/solve', function(done) {
         chai.request(server)
         .post('/api/solve')
         .send({
@@ -21,7 +21,7 @@ suite('Functional Tests', () => {
           done();
         })
     });
-    test('Solve a puzzle with missing puzzle string', function(done) {
+    test('Solve a puzzle with missing puzzle string: POST request to /api/solve', function(done) {
         chai.request(server)
         .post('/api/solve')
         .send({
@@ -35,7 +35,7 @@ suite('Functional Tests', () => {
           done();
         })
     });
-    test('Solve a puzzle with invalid characters', function(done) {
+    test('Solve a puzzle with invalid characters: POST request to /api/solve', function(done) {
         chai.request(server)
         .post('/api/solve')
         .send({
@@ -49,7 +49,7 @@ suite('Functional Tests', () => {
           done();
         })
     });
-    test('Solve a puzzle with incorrect length', function(done) {
+    test('Solve a puzzle with incorrect length: POST request to /api/solve', function(done) {
         chai.request(server)
         .post('/api/solve')
         .send({
@@ -64,7 +64,7 @@ suite('Functional Tests', () => {
         })
     });
     
-    test('Solve a puzzle that cannot be solved', function(done) {
+    test('Solve a puzzle that cannot be solved: POST request to /api/solve', function(done) {
         chai.request(server)
         .post('/api/solve')
         .send({
@@ -95,7 +95,7 @@ suite('Functional Tests', () => {
     });
 
     // api/check tests
-    test('Check a puzzle placement with all fields', function(done) {
+    test('Check a puzzle placement with all fields: POST request to /api/check', function(done) {
         chai.request(server)
         .post('/api/check')
         .send({
@@ -111,7 +111,7 @@ suite('Functional Tests', () => {
           done();
         })
     });
-    test('Check a puzzle placement with column placement conflict', function(done) {
+    test('Check a puzzle placement with single placement conflict: POST request to /api/check', function(done) {
         chai.request(server)
         .post('/api/check')
         .send({
@@ -128,7 +128,7 @@ suite('Functional Tests', () => {
           done();
         })
     });
-    test('Check a puzzle placement with column & row placement conflict', function(done) {
+    test('Check a puzzle placement with multiple placement conflicts: POST request to /api/check', function(done) {
       chai.request(server)
       .post('/api/check')
       .send({
@@ -145,7 +145,7 @@ suite('Functional Tests', () => {
         done();
       })
     });
-    test('Check a puzzle placement with multiple placement conflicts', function(done) {
+    test('Check a puzzle placement with all placement conflicts: POST request to /api/check', function(done) {
       chai.request(server)
       .post('/api/check')
       .send({
@@ -162,55 +162,7 @@ suite('Functional Tests', () => {
         done();
       })
     });        
-    test('Check a puzzle placement with missing required fields - puzzle', function(done) {
-        chai.request(server)
-        .post('/api/check')
-        .send({          
-          "puzzle":"",
-          "coordinate":"A1",
-          "value":"1"
-        })
-        .end(function(err, res){          
-          res.should.have.status(400);
-          res.should.be.json;
-          res.body.should.be.a('object');    
-          res.body.should.have.property('error').eql('Required field(s) missing');          
-          done();
-        })
-    });
-    test('Check a puzzle placement with missing required fields both coordinate', function(done) {
-        chai.request(server)
-        .post('/api/check')
-        .send({
-          "puzzle":"..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..",
-          "coordinate":"",
-          "value":"1"
-        })
-        .end(function(err, res){          
-          res.should.have.status(400);
-          res.should.be.json;
-          res.body.should.be.a('object');
-          res.body.should.have.property('error').eql('Required field(s) missing');
-          done();
-        })
-    });
-    test('Check a puzzle placement with missing required fields single coordinate', function(done) {
-      chai.request(server)
-      .post('/api/check')
-      .send({
-        "puzzle":"..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..",
-        "coordinate":"A",
-        "value":"1"
-      })
-      .end(function(err, res){          
-        res.should.have.status(400);
-        res.should.be.json;
-        res.body.should.be.a('object');
-        res.body.should.have.property('error').eql('Required field(s) missing');
-        done();
-      })
-    });
-    test('Check a puzzle placement with missing required fields - value', function(done) {
+    test('Check a puzzle placement with missing required fields: POST request to /api/check', function(done) {
         chai.request(server)
         .post('/api/check')
         .send({
@@ -226,7 +178,7 @@ suite('Functional Tests', () => {
           done();
         })
     });
-    test('Check a puzzle placement with invalid characters', function(done) {
+    test('Check a puzzle placement with invalid characters: POST request to /api/check', function(done) {
         chai.request(server)
         .post('/api/check')
         .send({
@@ -242,7 +194,7 @@ suite('Functional Tests', () => {
           done();
         })
     });
-    test('Check a puzzle placement with incorrect length', function(done) {
+    test('Check a puzzle placement with incorrect length: POST request to /api/check', function(done) {
         chai.request(server)
         .post('/api/check')
         .send({
@@ -258,7 +210,7 @@ suite('Functional Tests', () => {
           done();
         })
     });
-    test('Check a puzzle placement with invalid placement coordinate', function(done) {
+    test('Check a puzzle placement with invalid placement coordinate: POST request to /api/check', function(done) {
         chai.request(server)
         .post('/api/check')
         .send({
@@ -273,7 +225,7 @@ suite('Functional Tests', () => {
            done();
         })
     });
-    test('Check a puzzle placement with invalid placement value', function(done) {
+    test('Check a puzzle placement with invalid placement value: POST request to /api/check', function(done) {
         chai.request(server)
         .post('/api/check')
         .send({
