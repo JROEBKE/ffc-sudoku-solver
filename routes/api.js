@@ -22,9 +22,10 @@ module.exports = function (app) {
         if (!errors.isEmpty()) {
           return res.status(400).send({ errors: errors.array()});                 
         }   
-
         let coordinateArray = req.body.coordinate.split("");
-        let solution = new SudokuSolver(req.body.puzzle,coordinateArray[0], coordinateArray[1], req.body.value);
+        let row = coordinateArray[0].toString();
+        let col = coordinateArray.slice(1).toString(); //slice row from array to still be able to validate if coordinate length higher 2
+        let solution = new SudokuSolver(req.body.puzzle, row, col ,req.body.value);
 
         //I would rather use express validator here as well, but tutorial wants to use here explicit class for validation so we use it
         if (solution.validate()){

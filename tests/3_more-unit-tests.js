@@ -7,7 +7,7 @@ let solver;
 
 
 //TODO clean dupplicates
-suite('UnitTests', () => {
+suite('Unit Tests Part 2', () => {
  
   // validation string tests
   it('returns error when missing required field puzzle', function(){

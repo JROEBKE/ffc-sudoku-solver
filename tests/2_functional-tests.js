@@ -222,6 +222,7 @@ suite('Functional Tests', () => {
           res.should.have.status(400);
           res.should.be.json;
           res.body.should.be.a('object');
+          res.body.should.have.property('error').eql('Invalid coordinate');
            done();
         })
     });
@@ -237,7 +238,8 @@ suite('Functional Tests', () => {
           res.should.have.status(400);
           res.should.be.json;
           res.body.should.be.a('object');
-           done();
+          res.body.should.have.property('error').eql('Invalid value');
+          done();
         })
     });
 });
