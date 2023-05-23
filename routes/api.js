@@ -21,15 +21,20 @@ module.exports = function (app) {
         const errors = validationResult(req);        
         if (!errors.isEmpty()) {
           return res.status(400).send({ errors: errors.array()});                 
-        }
-        console.log(req.body);        
+        }        
         
         let puzzle = req.body.puzzle;                  
-        var coordinate = req.body.coordinate;
-        // problem is here when coordinate undefined I cannot make a split here, but moving it to solver is bad as well, so I added an if here to set row and col to undefined as well, which then is validated
-        if (coordinate==='' || coordinate===undefined){           
+        var coordinate = req.body.coordinate;        
+        // problem started when I wrote the solve I thought it would be a good idea to split coordinate before in row and col to make life easier, but expected tests results have a special case for an invalid corrdinate with single character in mind. I would have treated this as missing input, but 
+        if (coordinate==='' || coordinate===undefined ){           
           var row = '';
-          var column = '';          
+          var column = '';
+          //console.log('missing input coordinate');
+        } 
+        else if (coordinate.length===1){
+          var row = coordinate;          
+          var column = '0'; // have to set it to a invalid value to not trigger error missing input
+          //console.log('not sufficient coordinate '+row+' '+column);
         } else { 
           let coordinateArray = coordinate.split("") ;          
           var row = coordinateArray[0].toString();          

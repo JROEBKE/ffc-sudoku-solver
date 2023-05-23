@@ -162,7 +162,7 @@ suite('Functional Tests', () => {
         done();
       })
     });        
-    test('Check a puzzle placement with missing required fields: POST request to /api/check', function(done) {
+    test('Check a puzzle placement with missing required fields: POST request to /api/check - value', function(done) {
         chai.request(server)
         .post('/api/check')
         .send({
