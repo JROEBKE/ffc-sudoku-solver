@@ -1,12 +1,10 @@
 class SudokuSolver {
   constructor(puzzleString, row, column, value) {
-    this.puzzleString = puzzleString;
+    this.puzzleString=puzzleString;
     this.row = row;
     this.column = column;
-    this.value = value;
+    this.value = value 
   }
-
-  
 
   validate() {
     
@@ -52,8 +50,8 @@ class SudokuSolver {
     }
 
     if(this.row !== undefined && !this.row.match(/[a-i]|[A-I]$/)){
-      return {
-        "error": "Invalid coordinate"
+        return {
+          "error": "Invalid coordinate"
       }
     }
     if(this.column!==undefined && !this.column.match(/[1-9]$/)){    
@@ -61,6 +59,7 @@ class SudokuSolver {
         "error": "Invalid coordinate"
       }
     }
+
     if(this.value!==undefined && !this.value.match(/[1-9]$/)){      
       return {
         "error": "Invalid value"
@@ -72,20 +71,7 @@ class SudokuSolver {
       return false;
     }
   }
-  
-  checkCoordinate() {
-    const rows = ['A','B','C','D','E','F','G','H','I'];
-    let startValue = rows.indexOf(this.row) * 9;
-    let endValue = startValue + 9;
-    let choppedString = this.puzzleString.slice(startValue,endValue);
-    
-    if (Array.from(choppedString).indexOf(this.value)=='-1'){
-      return true;
-    } else {
-      return false;
-    }
-  }
-
+ 
   checkRowPlacement() {
     const rows = ['A','B','C','D','E','F','G','H','I'];
     let startValue = rows.indexOf(this.row) * 9;

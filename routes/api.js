@@ -21,11 +21,23 @@ module.exports = function (app) {
         const errors = validationResult(req);        
         if (!errors.isEmpty()) {
           return res.status(400).send({ errors: errors.array()});                 
-        }   
-        let coordinateArray = req.body.coordinate.split("");
-        let row = coordinateArray[0].toString();
-        let col = coordinateArray.slice(1).toString(); //slice row from array to still be able to validate if coordinate length higher 2
-        let solution = new SudokuSolver(req.body.puzzle, row, col ,req.body.value);
+        }
+        console.log(req.body);        
+        
+        let puzzle = req.body.puzzle;                  
+        var coordinate = req.body.coordinate;
+        // problem is here when coordinate undefined I cannot make a split here, but moving it to solver is bad as well, so I added an if here to set row and col to undefined as well, which then is validated
+        if (coordinate==='' || coordinate===undefined){           
+          var row = '';
+          var column = '';          
+        } else { 
+          let coordinateArray = coordinate.split("") ;          
+          var row = coordinateArray[0].toString();          
+          var column = coordinateArray.slice(1).toString(); //slice row from array to still be able to validate if coordinate length higher 2
+        }
+        let value = req.body.value;
+
+        let solution = new SudokuSolver(puzzle, row, column ,value);
 
         //I would rather use express validator here as well, but tutorial wants to use here explicit class for validation so we use it
         if (solution.validate()){
