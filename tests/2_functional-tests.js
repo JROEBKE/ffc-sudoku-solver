@@ -5,11 +5,9 @@ const server = require('../server');
 
 chai.use(chaiHttp);
 
-// MUST REWRITE TESTS FROM SHOULD TO ASSERT
-
 suite('Functional Tests', () => {
     // api/solve tests
-    it('Solve a puzzle with valid puzzle string: POST request to /api/solve', function(done) {
+    test('Solve a puzzle with valid puzzle string: POST request to /api/solve', function(done) {
       chai.request(server)
       .post('/api/solve')
       .send({
